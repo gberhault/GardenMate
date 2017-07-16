@@ -20,6 +20,7 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".PoivronActivity" />
+        <activity android:name=".PlantsActivity"></activity>
     </application>
 
 </manifest>

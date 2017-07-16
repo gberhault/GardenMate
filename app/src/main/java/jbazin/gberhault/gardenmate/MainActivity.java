@@ -1,25 +1,26 @@
 package jbazin.gberhault.gardenmate;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-    ImageButton poivronButton;
+    Button goToPlantsActivityButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        poivronButton = (ImageButton) findViewById(R.id.poivronImageButton);
 
-        poivronButton.setOnClickListener(new View.OnClickListener() {
+        goToPlantsActivityButton = (Button) findViewById(R.id.plantsActivityButton);
+
+        goToPlantsActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent descriptionPoivronIntent = new Intent(MainActivity.this,PoivronActivity.class);
-                startActivity(descriptionPoivronIntent);
+                Intent plantActivity = new Intent(MainActivity.this, PlantsActivity.class);
+                startActivity(plantActivity);
             }
         });
     }

@@ -23,7 +23,7 @@ public class SplashActivity extends Activity {
             public void run() {
                 splashBackgroundProcessDone();
             }
-        }, 3000);
+        }, 1);
     }
 
     private void splashBackgroundProcessDone() {
