@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 <!-- Copyright (c) Guillaume Berhault and Jerome Bazin since 2017. -->
 <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
-<set xmlns:android="http://schemas.android.com/apk/res/android">
-
-</set>
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+</resources>
