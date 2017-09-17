@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<!-- Copyright (c) Guillaume Berhault and Jerome Bazin since 2017. -->
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="jbazin.gberhault.gardenmate">
 
@@ -19,7 +23,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".PoivronActivity" />
         <activity android:name=".PlantsActivity"></activity>
     </application>
 

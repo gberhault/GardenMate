@@ -1,41 +1,72 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) Guillaume Berhault and Jerome Bazin since 2017.
+////////////////////////////////////////////////////////////////////////////////
+
 package jbazin.gberhault.gardenmate;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
-public class PlantsActivity extends AppCompatActivity implements PlantListFragment.OnFragmentInteractionListener {
+public class PlantsActivity extends AppCompatActivity implements PlantListFragment.SelectionListener {
+
+    private PlantListFragment plantListFragment;
+    private PlantDescriptionFragment plantDescriptionFragment;
+    private boolean onTwoPanes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plants);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        // If small screen is detected, load plant list fragment
+        if (!isOnTwoPanes()) {
+            plantListFragment = new PlantListFragment();
 
-        PlantListFragment plantListFragment = new PlantListFragment();
-        fragmentTransaction.add(R.id.mainAcitivityFrameLayoutContainer, plantListFragment);
-        fragmentTransaction.commit();
+            android.app.FragmentManager fragmentManager = getFragmentManager();
+            android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            fragmentTransaction.add(R.id.activity_plants_fragment_container, plantListFragment);
+
+            fragmentTransaction.commit();
+        } else {
+            plantDescriptionFragment = (PlantDescriptionFragment)
+                    getFragmentManager().findFragmentById(R.id.fragment2);
+        }
 
     }
 
+    private boolean isOnTwoPanes() {
+        return (findViewById(R.id.activity_plants_large) != null);
+    }
+
     @Override
-    public void onItemSelected() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+    public void onListItemClick(int position) {
 
-        PlantDescriptionFragment plantDescriptionFragment = new PlantDescriptionFragment();
-        fragmentTransaction.replace(R.id.mainAcitivityFrameLayoutContainer, plantDescriptionFragment);
-        fragmentTransaction.addToBackStack(null);
+        if (plantDescriptionFragment == null)
+            plantDescriptionFragment = new PlantDescriptionFragment();
 
-        fragmentTransaction.commit();
+        if (!isOnTwoPanes()) {
+            android.app.FragmentManager fragmentManager = getFragmentManager();
+            android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+            fragmentTransaction.replace(R.id.activity_plants_fragment_container, plantDescriptionFragment);
+            fragmentTransaction.addToBackStack(null);
+
+            fragmentTransaction.commit();
+
+            fragmentManager.executePendingTransactions();
+        }
+
+        plantDescriptionFragment.updatePlantDescriptionDisplay(position);
+
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

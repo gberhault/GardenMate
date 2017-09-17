@@ -1,105 +1,90 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) Guillaume Berhault and Jerome Bazin since 2017.
+////////////////////////////////////////////////////////////////////////////////
+
 package jbazin.gberhault.gardenmate;
 
+import android.app.Activity;
+import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.support.annotation.Nullable;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link PlantListFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link PlantListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class PlantListFragment extends Fragment
-{
+public class PlantListFragment extends ListFragment {
 
-    private OnFragmentInteractionListener mListener;
+    private final String[] PLANTS = {"pepper", "tomato"};
 
-    public PlantListFragment()
-    {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment PlantList2Fragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static PlantListFragment newInstance()
-    {
-        PlantListFragment fragment = new PlantListFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private String TAG = "Plant List Fragment";
+    private SelectionListener callBack;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null)
-        {
-        }
+
+        int layout = android.R.layout.simple_list_item_activated_1;
+
+        // Set the list adapter for this ListFragment
+        setListAdapter(new ArrayAdapter<>(getActivity(), layout, PLANTS));
+
+        // Retain this fragment across configuration changes.
+        setRetainInstance(true);
+
     }
 
+    // FOR API > 23
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        // Inflate the layout for this fragment
-        View fragView = inflater.inflate(R.layout.fragment_plant_list2, container, false);
-        Button b = (Button) fragView.findViewById(R.id.button);
-        b.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                mListener.onItemSelected();
-            }
-        });
-        return fragView;
-    }
-
-    @Override
-    public void onAttach(Context context)
-    {
+    public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener)
-        {
-            mListener = (OnFragmentInteractionListener) context;
+        try {
+            callBack = (SelectionListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement SelectionListener");
         }
-        else
-        {
-            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+    }
+
+    // FOR API < 23
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            callBack = (SelectionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement SelectionListener");
         }
     }
 
     @Override
-    public void onDetach()
-    {
-        super.onDetach();
-        mListener = null;
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // When using two-pane layout, configure the ListView to highlight the
+        // selected list item
+
+        if (isInTwoPaneMode()) {
+            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        }
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener
-    {
-        void onItemSelected();
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
+        callBack.onListItemClick(position);
     }
+
+    // If there is a FeedFragment, then the layout is two-pane
+    private boolean isInTwoPaneMode() {
+
+        return getFragmentManager().findFragmentById(R.id.fragment2) != null;
+
+    }
+
+    public interface SelectionListener {
+        void onListItemClick(int position);
+    }
+
 }
