@@ -15,9 +15,8 @@ import android.widget.ListView;
 
 public class PlantListFragment extends ListFragment {
 
-    private final String[] PLANTS = {"pepper", "tomato"};
+    private final String[] PLANTS = new DataImpl().getPlantList(PlantType.all);
 
-    private String TAG = "Plant List Fragment";
     private SelectionListener callBack;
 
     @Override
